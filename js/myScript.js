@@ -3,6 +3,7 @@ var playerTwo = "O";
 var currentPlayer = playerOne;
 var cell;
 var numberOfCellsClicked = 0;
+var gameOver = false;
 
 function markTheCell(cellId) {
     cell = document.getElementById(cellId);
@@ -15,7 +16,7 @@ function markTheCell(cellId) {
         div.remove();
         showResult( `Player ${currentPlayer} wins. Refresh page to play again!`);
     }
-    if (numberOfCellsClicked == 9) {
+    if (numberOfCellsClicked == 9 && !gameOver) {
         showResult("This match is a draw. Refresh page to play again!");
     } 
     if (currentPlayer == playerOne) {
@@ -50,6 +51,7 @@ function isWinner(playerSign) {
             (cellAt13 == playerSign) && (cellAt23 == playerSign) && (cellAt33 == playerSign) || 
             (cellAt21 == playerSign) && (cellAt22 == playerSign) && (cellAt23 == playerSign) ||
             (cellAt31 == playerSign) && (cellAt32 == playerSign) && (cellAt33 == playerSign)) {
+                gameOver = true;
                 return true;
             }
         return false;
