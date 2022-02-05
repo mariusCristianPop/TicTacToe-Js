@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+div {
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.outer-grid {
+  position: relative;
+  float: left;
+  width: 33.3%;
+  padding-bottom: 33.3%;
+  border: 1px solid gray;
+  background-color: #9cc;
+}
+.outer-square {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 90%;
+  height: 90%;
+  background-color: #ccc;
+  margin: 5%;
+  display: -webkit-flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.inner-grid {
+  width: 33.3%;
+  height: 33.3%;
+  border: 1px solid red;
+  display: table;
+}
+.inner-square {
+  line-height: 100%;
+  font-size: 50px;
+  font-weight: bold;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
