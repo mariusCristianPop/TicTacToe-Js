@@ -1,11 +1,53 @@
+document.addEventListener("DOMContentLoaded", function() { 
+    // wait for the html page to load before executing the script or else appending to body will result in an error;
+    createGameBoard();
+});
+
 var playerOne = "X";
 var playerTwo = "O";
 var currentPlayer = playerOne;
 var cell;
 var numberOfCellsClicked = 0;
 var gameOver = false;
+var gameBoard = [];
+
+// create the game board
+function createGameBoard() {
+    // create the grid container
+    var gridContainer = document.createElement('div');
+    gridContainer.setAttribute("id", "gridContainer");
+    gridContainer.setAttribute("class", "grid-container");
+    // create the outer grid
+    var outerGrid = document.createElement('div');
+    outerGrid.setAttribute("class", "outer-grid");
+    gridContainer.appendChild(outerGrid);
+    // create the outer square
+    var outerSquare = document.createElement('div');
+    outerSquare.setAttribute("class", "outer-square");
+    outerGrid.appendChild(outerSquare);
+    //create the inner grid
+    for (let i = 1; i < 4; ++i) {
+        for (let j = 1; j < 4; ++j) {
+            var innerGrid = document.createElement('div');
+            innerGrid.setAttribute("class", "inner-grid");
+            var innerSquare = document.createElement('div');
+            innerSquare.setAttribute("class", "inner-square");
+            innerSquare.setAttribute("id", `${i * 10 + j}`);
+            innerSquare.setAttribute("onclick", `markTheCell(${i * 10 + j})`);
+            innerSquare.setAttribute("style", "cursor: pointer;");
+            innerGrid.appendChild(innerSquare);
+            outerSquare.appendChild(innerGrid);  
+        }
+    }
+    document.body.appendChild(gridContainer);
+}
+
+function createGameArray() {
+    gameBoard = [["1", "1", "1"],["1", "1", "1"],["1", "1", "1"],["1", "1", "1"]];
+}
 
 function markTheCell(cellId) {
+    createGameArray();
     cell = document.getElementById(cellId);
     cell.innerText = currentPlayer;
     cell.onclick = "";
@@ -27,35 +69,28 @@ function markTheCell(cellId) {
 }
 
 function isWinner(playerSign) {
-    
-    // Assign cells value to variables
-    var cellAt11 = document.getElementById(11).innerText;
-    var cellAt12 = document.getElementById(12).innerText;
-    var cellAt13 = document.getElementById(13).innerText;
-
-    var cellAt21 = document.getElementById(21).innerText;
-    var cellAt22 = document.getElementById(22).innerText;
-    var cellAt23 = document.getElementById(23).innerText;
-
-    var cellAt31 = document.getElementById(31).innerText;
-    var cellAt32 = document.getElementById(32).innerText;
-    var cellAt33 = document.getElementById(33).innerText;
-    
-    //checking the variables against the player sign
-    while(true) {
-        if ((cellAt11 == playerSign) && (cellAt12 == playerSign) && (cellAt13 == playerSign) ||
-            (cellAt11 == playerSign) && (cellAt21 == playerSign) && (cellAt31 == playerSign) ||
-            (cellAt11 == playerSign) && (cellAt22 == playerSign) && (cellAt33 == playerSign) ||
-            (cellAt12 == playerSign) && (cellAt22 == playerSign) && (cellAt32 == playerSign) ||
-            (cellAt13 == playerSign) && (cellAt22 == playerSign) && (cellAt31 == playerSign) ||
-            (cellAt13 == playerSign) && (cellAt23 == playerSign) && (cellAt33 == playerSign) || 
-            (cellAt21 == playerSign) && (cellAt22 == playerSign) && (cellAt23 == playerSign) ||
-            (cellAt31 == playerSign) && (cellAt32 == playerSign) && (cellAt33 == playerSign)) {
-                gameOver = true;
-                return true;
+    // Add cell values to array
+    for (let i = 1; i < 4; ++i) {
+        for (let j = 1; j < 4; ++j) {
+            var elem = document.getElementById(`${i * 10 + j}`);
+            if (elem != null) {
+                gameBoard[i][j] = elem.innerText;
             }
-        return false;
+            //checking the variables against the player sign
+            if ((gameBoard[1][1] == playerSign) && (gameBoard[1][2]  == playerSign) && (gameBoard[1][3] == playerSign) ||
+            (gameBoard[1][1] == playerSign) && (gameBoard[2][1]  == playerSign) && (gameBoard[3][1] == playerSign) ||
+            (gameBoard[1][1] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[3][3] == playerSign) ||
+            (gameBoard[1][2] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[3][2] == playerSign) ||
+            (gameBoard[1][3] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[3][1] == playerSign) ||
+            (gameBoard[1][3] == playerSign) && (gameBoard[2][3]  == playerSign) && (gameBoard[3][3] == playerSign) ||
+            (gameBoard[2][1] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[2][3] == playerSign) ||
+            (gameBoard[3][1] == playerSign) && (gameBoard[3][2]  == playerSign) && (gameBoard[3][3] == playerSign)) {
+            gameOver = true;
+            return true;
+            }
+        }
     }
+    return false;
 }
 
 function showResult(textResult) {
