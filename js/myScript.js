@@ -52,8 +52,9 @@ function markTheCell(cellId) {
     cell.innerText = currentPlayer;
     cell.onclick = "";
     ++numberOfCellsClicked;
-    console.log(isWinner(currentPlayer)); // left here on purpose for debugging reasons.
-    if (isWinner(currentPlayer)) {
+    console.log(`Current player is: ${currentPlayer}`); // left here on purpose for debugging reasons.
+    syncElements();
+    if (checkLines() || checkColumns() || checkMainDiagonal() || checkSecondarDiagonal()) {
         var div = document.getElementById("gridContainer");
         div.remove();
         showResult( `Player ${currentPlayer} wins. Refresh page to play again!`);
@@ -68,34 +69,72 @@ function markTheCell(cellId) {
     }
 }
 
-function isWinner(playerSign) {
-    // Add cell values to array
-    for (let i = 1; i < 4; ++i) {
-        for (let j = 1; j < 4; ++j) {
-            var elem = document.getElementById(`${i * 10 + j}`);
-            if (elem != null) {
-                gameBoard[i][j] = elem.innerText;
-            }
-            //checking the variables against the player sign
-            if ((gameBoard[1][1] == playerSign) && (gameBoard[1][2]  == playerSign) && (gameBoard[1][3] == playerSign) ||
-            (gameBoard[1][1] == playerSign) && (gameBoard[2][1]  == playerSign) && (gameBoard[3][1] == playerSign) ||
-            (gameBoard[1][1] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[3][3] == playerSign) ||
-            (gameBoard[1][2] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[3][2] == playerSign) ||
-            (gameBoard[1][3] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[3][1] == playerSign) ||
-            (gameBoard[1][3] == playerSign) && (gameBoard[2][3]  == playerSign) && (gameBoard[3][3] == playerSign) ||
-            (gameBoard[2][1] == playerSign) && (gameBoard[2][2]  == playerSign) && (gameBoard[2][3] == playerSign) ||
-            (gameBoard[3][1] == playerSign) && (gameBoard[3][2]  == playerSign) && (gameBoard[3][3] == playerSign)) {
-            gameOver = true;
-            return true;
-            }
-        }
-    }
-    return false;
-}
-
 function showResult(textResult) {
     var par = document.createElement("p");
     var text = document.createTextNode(textResult);
     par.appendChild(text);
     document.body.appendChild(par);
+}
+
+function syncElements() { // write all non-null board elements in a matrix
+    for (let i = 1; i < 4; ++i) {
+        for (let j = 1; j < 4; ++j) { 
+            var elem = document.getElementById(`${j * 10 + i}`);
+            if (elem != null) {
+                gameBoard[i][j] = elem.innerText;
+            }
+        }
+    }
+}
+
+function checkCounter(counter) { // check counter value. If it's 3 we have a winner
+    if (counter == 3) {
+        gameOver = true;
+        return true;
+    }
+    return false;
+}
+
+function checkLines() { //check all lines
+    let counter = 0;
+    for (let i = 1; i < 4; ++i) {
+        for (let j = 1; j < 4; ++j) {
+            if (gameBoard[i][j] == currentPlayer) {
+                ++counter;
+            }
+        }
+        return checkCounter(counter);
+    }
+}
+
+function checkColumns() { //check all columns
+    let counter = 0;
+    for (let i = 1; i < 4; ++i) {
+        for (let j = 1; j < 4; ++j) {
+            if (gameBoard[j][i] == currentPlayer) {
+                ++counter;
+            }
+        }
+    }
+    return checkCounter(counter);
+}
+
+function checkMainDiagonal() {  //Check main diagonal
+    let counter = 0;
+    for (let i = 1; i < 4; ++i) {
+        if (gameBoard[i][i] == currentPlayer) {
+            ++counter;
+        }
+    }
+    return checkCounter(counter);
+}
+
+function checkSecondarDiagonal() { //check the secondary diagonal
+    let counter = 0;
+    for (let i = 1; i < 4; ++i) {
+       if (gameBoard[i][4 - i] == currentPlayer) {
+           ++counter;
+       }
+    }
+    return checkCounter(counter);
 }
