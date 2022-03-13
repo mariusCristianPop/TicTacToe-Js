@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() { 
     // wait for the html page to load before executing the script or else appending to body will result in an error;
     createGameBoard();
+    createGameArray();
 });
 
 var playerOne = "X";
@@ -47,13 +48,12 @@ function createGameArray() {
 }
 
 function markTheCell(cellId) {
-    createGameArray();
     cell = document.getElementById(cellId);
     cell.innerText = currentPlayer;
     cell.onclick = "";
     ++numberOfCellsClicked;
     console.log(`Current player is: ${currentPlayer}`); // left here on purpose for debugging reasons.
-    syncElements();
+    syncElements();   
     if (checkLines() || checkColumns() || checkMainDiagonal() || checkSecondarDiagonal()) {
         var div = document.getElementById("gridContainer");
         div.remove();
@@ -98,22 +98,30 @@ function checkCounter(counter) { // check counter value. If it's 3 we have a win
 function checkLines() { //check all lines
     let counter = 0;
     for (let i = 1; i < 4; ++i) {
+        counter = 0;
         for (let j = 1; j < 4; ++j) {
-            if (gameBoard[i][j] == currentPlayer) {
+            if (gameBoard[j][i] == currentPlayer) {
                 ++counter;
             }
         }
-        return checkCounter(counter);
+        if (counter == 3) {
+            return true
+        }
     }
+    return checkCounter(counter);
 }
 
 function checkColumns() { //check all columns
     let counter = 0;
     for (let i = 1; i < 4; ++i) {
+        counter = 0;
         for (let j = 1; j < 4; ++j) {
-            if (gameBoard[j][i] == currentPlayer) {
+            if (gameBoard[i][j] == currentPlayer) {
                 ++counter;
             }
+        }
+        if (counter == 3) {
+            return true
         }
     }
     return checkCounter(counter);
