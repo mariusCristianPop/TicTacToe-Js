@@ -1,2 +1,2 @@
 # TicTacToe-Js
- The classic Tic Tac Toe game
+[Click here to play](https://mariuscristianpop.github.io/TicTacToe-Js/)
